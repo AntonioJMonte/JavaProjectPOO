@@ -53,6 +53,6 @@ public class Vendedor extends Usuario {
 
     public void addProducts (Loja loja, Produtos produto) {
         loja.adicionarProdutos(produto);
-        System.out.println("O produto " + nome + " foi adicionado à loja");
+        System.out.println("O produto " + produto.getNome() + " foi adicionado à loja");
     }
 }

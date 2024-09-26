@@ -18,7 +18,7 @@ public class Cliente extends Usuario {
 
     @Override
     public void criarConta () {
-        Scanner scam = new Scanner(System.in);
+        /*Scanner scam = new Scanner(System.in);
 
         System.out.println("<--- Criando conta do cliente --->");
 
@@ -30,25 +30,24 @@ public class Cliente extends Usuario {
         String email = scam.nextLine();
         setEmail(email);
 
-        System.out.println("Conta criada com sucesso! Seja bem-vindo " + nome);
+        System.out.println("Conta criada com sucesso! Seja bem-vindo " + nome);*/
     }
 
-    public void accessProducts (Loja loja) {
+    public void accessProducts(Loja loja) {
         List<Produtos> produto = loja.getProdutos();
         if (produto.isEmpty()) {
             System.out.println("Não há produtos disponíveis");
-        }
-        else {
+        } else {
             System.out.println("Acessando os produtos: ");
             for (Produtos produtos : produto) {
                 System.out.println("<----------------------------->");
                 System.out.println("Nome: " +  produtos.getNome() + ", Preço: " + produtos.getPreco()
                         + ", Quantidade em estoque: " + produtos.getQuantidadeEmEstoque());
                 System.out.println("<----------------------------->");
-
             }
         }
     }
+    
 
     public void purchaseOption (Produtos produto, int unit) {
         if (produto.getQuantidadeEmEstoque() >= unit) {
@@ -63,5 +62,9 @@ public class Cliente extends Usuario {
 
     public void deleteAccount (Usuario infoUser) {
 
+    }
+
+    public static Cliente createProfile (String nome, String email) {
+        return new Cliente(nome, email);
     }
 }

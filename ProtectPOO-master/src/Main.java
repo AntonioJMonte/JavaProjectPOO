@@ -54,7 +54,6 @@ public class Main {
 
         Scanner scam = new Scanner(System.in);
         int valor = 0;
-        Loja loja = new Loja(new ArrayList<>());
         boolean continuar = false;
 
         List<Cliente> cl = new ArrayList<Cliente>();
@@ -95,14 +94,18 @@ public class Main {
             System.out.println();
         }
 
-        CRUD everything = new CRUD(pr, cl, ve, ge, new Loja(pr));
-
-        System.out.println("<----------------------------->");
+        Loja loja = new Loja(new ArrayList<>());
+        CRUD everything = new CRUD(pr, cl, ve, ge, loja);
+        boolean prosseguir = true;
+        while (prosseguir) {
+            System.out.println("<----------------------------->");
         System.out.println("1 - Login como cliente");
         System.out.println("2 - Login como vendedor");
         System.out.println("3 - Login como gerente");
+        System.out.println("4 - Finalizar programa");
         System.out.println("<----------------------------->");
-        while (valor < 1 || valor > 3) {
+        
+        while (valor < 1 || valor > 4) {
             System.out.print("Digite a sua opção: ");
             try {
                 valor = scam.nextInt();
@@ -118,75 +121,134 @@ public class Main {
             case 1:
                 String nomeDoCliente;
                 String emailCliente;
+                int validar = 0;
 
-                // Inserir os dados de login do cliente
-                System.out.print("Digite seu nome: ");
-                nomeDoCliente = scam.nextLine();
-                System.out.print("Digite seu email: ");
-                emailCliente = scam.nextLine();
+                System.out.println("1 - Login com conta existente: ");
+                System.out.println("2 - Criar conta: ");
+                validar = scam.nextInt();
+                scam.nextLine();
 
-                // Criar o objeto cliente com os dados fornecidos
-                Cliente cliente = new Cliente(nomeDoCliente, emailCliente);
-                System.out.println("Login feito com sucesso como Cliente!");
-
-                continuar = true;
-                while (continuar) {
-                    System.out.println("<----------------------------->");
-                    System.out.println("1 - Acessar catálogo de produtos");
-                    System.out.println("2 - Comprar produto");
-                    System.out.println("3 - Criar conta");
-                    System.out.println("4 - Deletar conta");
-                    System.out.println("5 - Sair");
-                    System.out.println("<----------------------------->");
-                    System.out.print("Digite a sua opção: ");
-                    valor = scam.nextInt();
-                    scam.nextLine();  // Consumir o restante da linha após nextInt()
-
-                    if (valor == 1) {
-                        // Acessar o catálogo de produtos
-                        cliente.accessProducts(loja);
-                    }
-                    else if (valor == 2) {
-                        // Comprar produto
-                        System.out.print("Digite o nome do produto que deseja comprar: ");
-                        String nomeProduto = scam.nextLine();
-                        System.out.print("Digite a quantidade que deseja comprar: ");
-                        int quantidade = scam.nextInt();
-                        scam.nextLine();  // Consumir o restante da linha
-
-                        // Buscar produto na loja e realizar a compra
-                        Produtos produtoParaComprar = loja.getProdutoPorNome(nomeProduto);
-                        if (produtoParaComprar != null) {
-                            cliente.purchaseOption(produtoParaComprar, quantidade);
+                //Login com conta existente
+                if (validar == 1) {
+                    // Inserir os dados de login do cliente
+                    System.out.print("Digite seu nome: ");
+                    nomeDoCliente = scam.nextLine();
+                    System.out.print("Digite seu email: ");
+                    emailCliente = scam.nextLine();
+    
+                    // Criar o objeto cliente com os dados fornecidos
+                    Cliente cliente = new Cliente(nomeDoCliente, emailCliente);
+                    System.out.println("Login feito com sucesso como Cliente!");
+    
+                    continuar = true;
+                    while (continuar) {
+                        System.out.println("<----------------------------->");
+                        System.out.println("1 - Acessar catálogo de produtos");
+                        System.out.println("2 - Comprar produto");
+                        System.out.println("3 - Deletar conta");
+                        System.out.println("4 - Sair");
+                        System.out.println("<----------------------------->");
+                        System.out.print("Digite a sua opção: ");
+                        valor = scam.nextInt();
+                        scam.nextLine();  // Consumir o restante da linha após nextInt()
+    
+                        if (valor == 1) {
+                            // Acessar o catálogo de produtos
+                            cliente.accessProducts(loja);
                         }
-                        else {
-                            System.out.println("Produto não encontrado!");
+                        else if (valor == 2) {
+                            // Comprar produto
+                            System.out.print("Digite o nome do produto que deseja comprar: ");
+                            String nomeProduto = scam.nextLine();
+                            System.out.print("Digite a quantidade que deseja comprar: ");
+                            int quantidade = scam.nextInt();
+                            scam.nextLine();  // Consumir o restante da linha
+    
+                            // Buscar produto na loja e realizar a compra
+                            Produtos produtoParaComprar = loja.getProdutoPorNome(nomeProduto);
+                            if (produtoParaComprar != null) {
+                                cliente.purchaseOption(produtoParaComprar, quantidade);
+                            }
+                            else {
+                                System.out.println("Produto não encontrado!");
+                            }
                         }
-                    }
-                    else if (valor == 3) {
-                        // Criar conta
-                        cliente.criarConta();  // Método já pede os dados do cliente
-                    }
-                    else if (valor == 4) {
-                        // Deletar conta
-                    }
-                    else if (valor == 5) {
-                        continuar = false;
-                        System.out.println("Saindo...");
+                        else if (valor == 3) {
+                            // Deletar conta
+                        }
+                        else if (valor == 4) {
+                            continuar = false;
+                            System.out.println("Voltando para o menu principal...");
+                        }
                     }
                 }
+                
+                else if (validar == 2) {
+                    System.out.print("Digite o nome de usuário: ");
+                    nomeDoCliente = scam.nextLine();
+                    System.out.print("Digite o email a ser cadastrado: ");
+                    emailCliente = scam.nextLine();
+
+                    Cliente newCliente = Cliente.createProfile(nomeDoCliente, emailCliente);
+                    cl.add (newCliente);
+
+                    System.out.println("Seja bem-vindo " + nomeDoCliente + "! Agora escolha uma das opções a seguir: ");
+                    continuar = true;
+                    Cliente cliente = new Cliente(nomeDoCliente, emailCliente);
+                    while (continuar) {
+                        System.out.println("<----------------------------->");
+                        System.out.println("1 - Acessar catálogo de produtos");
+                        System.out.println("2 - Comprar produto");
+                        System.out.println("3 - Deletar conta");
+                        System.out.println("4 - Sair");
+                        System.out.println("<----------------------------->");
+                        System.out.print("Digite a sua opção: ");
+                        valor = scam.nextInt();
+                        scam.nextLine();  // Consumir o restante da linha após nextInt()
+    
+                        if (valor == 1) {
+                            // Acessar o catálogo de produtos
+                            cliente.accessProducts(loja);
+                        }
+                        else if (valor == 2) {
+                            // Comprar produto
+                            System.out.print("Digite o nome do produto que deseja comprar: ");
+                            String nomeProduto = scam.nextLine();
+                            System.out.print("Digite a quantidade que deseja comprar: ");
+                            int quantidade = scam.nextInt();
+                            scam.nextLine();  // Consumir o restante da linha
+    
+                            // Buscar produto na loja e realizar a compra
+                            Produtos produtoParaComprar = loja.getProdutoPorNome(nomeProduto);
+                            if (produtoParaComprar != null) {
+                                cliente.purchaseOption(produtoParaComprar, quantidade);
+                            }
+                            else {
+                                System.out.println("Produto não encontrado!");
+                            }
+                        }
+                        else if (valor == 3) {
+                            // Deletar conta
+                        }
+                        else if (valor == 4) {
+                            continuar = false;
+                            System.out.println("Voltando para o menu principal...");
+                        }
+                    }
+                }
+                valor = 0;
                 break;
 
         //Login como vendedor
             case 2:
                 String nomeDoVendedor;
-                String email;
+                String emailVendedor;
 
                 System.out.print("Digite seu nome: ");
                 nomeDoVendedor = scam.nextLine();
                 System.out.print("Digite seu email: ");
-                email = scam.nextLine();
-                Vendedor vendedor = new Vendedor(nomeDoVendedor, email);
+                emailVendedor = scam.nextLine();
+                Vendedor vendedor = new Vendedor(nomeDoVendedor, emailVendedor);
 
                 System.out.println("Login feito com sucesso como Vendedor!");
 
@@ -222,15 +284,61 @@ public class Main {
                     }
                     else if (valor == 3) {
                         continuar = false;
-                        System.out.println("Saindo...");
+                        System.out.println("Voltando para o menu principal...");
                     }
                 }
-                scam.close();  // Fechar o scanner ao final
+                valor = 0;
                 break;
+        // Login como gerente
             case 3:
+                String nomeDoGerente;
+                String emailGerente;
+
+                System.out.println("Digite seu nome: ");
+                nomeDoGerente = scam.nextLine();
+                System.out.println("Digite seu email: ");
+                emailGerente = scam.nextLine();
+                Gerente gerente = new Gerente(nomeDoGerente, emailGerente);
+
+                System.out.println("Login como Gerente feito com sucesso!");
+
+                continuar = true;
+                while (continuar) {
+                    System.out.println("<----------------------------->");
+                    System.out.println("1 - Contratar vendedor");
+                    System.out.println("2 - Demitir vendedor");
+                    System.out.println("3 - Calcular lucros");
+                    System.out.println("4 - Sair");
+                    System.out.println("<----------------------------->");
+                    System.out.print("Digite a sua opção: ");
+                    valor = scam.nextInt();
+                    scam.nextLine();  // Consumir o restante da linha após nextInt()
+
+                    if (valor == 1) {
+                        gerente.criarVendedor();
+                    }
+                    else if (valor == 2) {
+                        //Lógica para deletar conta
+                    }
+                    else if (valor == 3) {
+                        gerente.calcularLucros(loja);
+                    }
+                    else if (valor == 4) {
+                        continuar = false;
+                        System.out.println("Voltando para o menu principal...");
+                    }
+                }
+                valor = 0;
+                break;
+            case 4: 
+                System.out.println("Finalizando o programa...");
+                prosseguir = false;
+
+                scam.close();  // Fechar o scanner ao final
                 break;
             default:
                 break;
+            }
         }
-    }
+    }     
 }
